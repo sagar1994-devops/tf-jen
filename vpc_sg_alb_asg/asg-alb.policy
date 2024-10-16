@@ -1,0 +1,116 @@
+# Create Alarm for Scaling Up
+resource "aws_cloudwatch_metric_alarm" "high_cpu" {
+  alarm_name          = "${var.environment}-high-cpu"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 1
+  metric_name        = "CPUUtilization"
+  namespace          = "AWS/EC2"
+  period             = 60
+  statistic          = "Average"
+  threshold          = 70
+
+  dimensions = {
+    AutoScalingGroupName = aws_autoscaling_group.auto_scaling_group.name
+  }
+
+  alarm_actions = [aws_autoscaling_policy.scale_up.arn]
+}
+
+# Create Alarm for Scaling down
+
+resource "aws_cloudwatch_metric_alarm" "low_cpu" {
+  alarm_name          = "${var.environment}-low-cpu"
+  comparison_operator = "LessThanThreshold"
+  evaluation_periods  = 1
+  metric_name        = "CPUUtilization"
+  namespace          = "AWS/EC2"
+  period             = 60
+  statistic          = "Average"
+  threshold          = 70
+
+  dimensions = {
+    AutoScalingGroupName = aws_autoscaling_group.auto_scaling_group.name
+  }
+
+  alarm_actions = [aws_autoscaling_policy.scale_down.arn]
+}
+
+
+# Create Scale up Policy
+resource "aws_autoscaling_policy" "scale_up" {
+  name                   = "${var.environment}-scale-up"
+  scaling_adjustment      = 1
+  adjustment_type        = "ChangeInCapacity"
+  cooldown               = 300
+  autoscaling_group_name = aws_autoscaling_group.auto_scaling_group.name
+}
+
+# Create Scale down Policy
+resource "aws_autoscaling_policy" "scale_down" {
+  name                   = "${var.environment}-scale-down"
+  scaling_adjustment      = -1
+  adjustment_type        = "ChangeInCapacity"
+  cooldown               = 300
+  autoscaling_group_name = aws_autoscaling_group.example.name
+}
+
+
+
+
+
+
+resource "aws_autoscaling_policy" "scale_up" {
+  name                   = "${var.environment}-scale-up"
+  scaling_adjustment      = 1
+  cooldown = 300
+  adjustment_type        = "ChangeInCapacity"
+  autoscaling_group_name = aws_autoscaling_group.my_asg.name
+}
+
+resource "aws_autoscaling_policy" "scale_down" {
+  name                   = "${var.environment}-scale-down"
+  scaling_adjustment      = -1
+  cooldown = 300
+  adjustment_type        = "ChangeInCapacity"
+  autoscaling_group_name = aws_autoscaling_group.my_asg.name
+}
+
+
+
+
+
+# Create Alarm for Scaling Up based on ALB Request Count
+resource "aws_cloudwatch_metric_alarm" "high_request_count" {
+  alarm_name          = "${var.environment}-high-request-count"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 1
+  metric_name        = "RequestCount"
+  namespace          = "AWS/ApplicationELB"
+  period             = 60
+  statistic          = "Sum"
+  threshold          = 100  # Adjust this based on your application's requirements
+
+  dimensions = {
+    LoadBalancer = aws_lb.my_application_load_balancer.id  # Reference to your ALB
+  }
+
+  alarm_actions = [aws_autoscaling_policy.scale_up.arn]
+}
+
+# Create Alarm for Scaling Down based on ALB Request Count
+resource "aws_cloudwatch_metric_alarm" "low_request_count" {
+  alarm_name          = "${var.environment}-low-request-count"
+  comparison_operator = "LessThanThreshold"
+  evaluation_periods  = 1
+  metric_name        = "RequestCount"
+  namespace          = "AWS/ApplicationELB"
+  period             = 60
+  statistic          = "Sum"
+  threshold          = 10  # Adjust this based on your application's requirements
+
+  dimensions = {
+    LoadBalancer = aws_lb.my_application_load_balancer.id  # Reference to your ALB
+  }
+
+  alarm_actions = [aws_autoscaling_policy.scale_down.arn]
+}
