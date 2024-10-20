@@ -6,7 +6,7 @@ variable "environment" {
 
 variable "aws_region" {
   type        = string
-  default     = "us-east-1"
+  default     = "us-east-2"
   description = "The AWS region where the resources will be deployed."
 }
 
@@ -31,12 +31,12 @@ variable "private_subnet_cidrs" {
 
 variable "azs" {
   type    = list(string)
-  default = ["us-east-1a", "us-east-1b"]
+  default = ["us-east-2a", "us-east-2b"]
 }
 
 variable "ami_id" {
   type    = string
-  default = "ami-0e54eba7c51c234f6"
+  default = "ami-0ea3c35c5c3284d82"
 }
 
 variable "instance_type" {
@@ -46,7 +46,7 @@ variable "instance_type" {
 
 variable "key_name" {
   type    = string
-  default = "terraform-key"
+  default = "newkey"
 }
 
 variable "desired_capacity" {
