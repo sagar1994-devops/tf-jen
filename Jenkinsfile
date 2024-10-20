@@ -14,7 +14,7 @@ pipeline {
         stage('Checkout Source Code') {
             steps {
                 script {
-                    checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'git@github.com:sagar1994-devops/tf-jen.git']])
+                    checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/sagar1994-devops/tf-jen.git']])
                 }
             }
         }
