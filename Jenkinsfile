@@ -8,13 +8,13 @@ pipeline {
     environment {
         AWS_ACCESS_KEY_ID = credentials('aws-creds')
         AWS_SECRET_ACCESS_KEY = credentials('aws-creds')
-        AWS_DEFAULT_REGION = "us-east-1"
+        AWS_DEFAULT_REGION = "us-east-2"
     }
     stages {
         stage('Checkout Source Code') {
             steps {
                 script {
-                    checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/srdangat/tf-jen.git']])
+                    checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'git@github.com:sagar1994-devops/tf-jen.git']])
                 }
             }
         }
